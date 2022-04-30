@@ -114,8 +114,7 @@ public class FileIO {
 		}
 		writer2.close();//close writer
 		} catch (IOException e) 
-		{System.out.println("DEBUG: Cannot write to organized file, it was not found");}
-		
+		{System.out.println("DEBUG: Cannot write to organized file, it was not found");}	
 	}
 	
 }
