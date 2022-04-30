@@ -4,10 +4,14 @@ import java.io.FileReader;
 import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.io.BufferedReader;
+import java.util.HashSet;
+
+
+//MAYBE SWITCH EVERYTHING TO BUFFERED READERS
+
 
 public class FileIO {
 
@@ -18,113 +22,103 @@ public class FileIO {
 	//tester function that just checks to make sure that the files exist
 	public static boolean openTextFile(String fileName)
 	{
-		//System.out.println("This is the name of the file we are searching for " + fileName);
-		
-		
 		try {
-			File file = new File(fileName);
-			//System.out.println(file.exists());
+			File file = new File(fileName);		
 			Scanner scan = new Scanner(file);//open a scanner
-			//System.out.println("Got to here");
-			//scanExists.close();//close a scanner
 		} catch (FileNotFoundException e) {
 			System.out.println("DEBUG: File wasn't found in openTextFile");//if the file was not found output this message and return false	
 			return false;
 		}		
-		return true;//else return true
-		
+		return true;//else return true		
 	}
 	
+	
+	
 	public static void readTextFile(String fileName)
-	{
-		
+	{	
 		String s = "";
 		
-		if (openTextFile(fileName) == true)
+		if (openTextFile(fileName) == true)//if the file exists
 		{
 			File file = new File(fileName);
 			Scanner scan = null;
-			try {scan = new Scanner(file);} catch (FileNotFoundException e) {System.out.println("DEBUG: File wasn't found in readTextFile Function");}
 			
-			String toNewFile = "";
+			try {scan = new Scanner(file);} catch (FileNotFoundException e) //redundant, probably an easier way to do this
+			{System.out.println("DEBUG: File wasn't found in readTextFile Function");}
+			
+			String toNewFile = "";//string that will go to the new file
 	
 			while (scan.hasNextLine()) {
 				
-				s = scan.next();
+				s = scan.next(); //s is the next string in the file
 				
-				if(s.contains(".") == false)
+				if(s.contains(".") == false)//if s does not have a decimal (BE WILLING TO ADD MORE PUNCTUATION POINTS HERE TO CHECK FOR)
 				{
-					if (s.contains("[") == true)
+					if (s.contains("[") == true)//if s has brackets around it
 					{
-						s = s.substring(1, s.length()-1);	
+						s = s.substring(1, s.length()-1);//make the string just the words insied the brackets
 					}
-					try {
-						Integer.parseInt(s);
-					} catch (NumberFormatException e) {	
-						toNewFile = toNewFile.concat(s + "\n");				
-				}
 					
-					
-					
-					
-					
+					try {Integer.parseInt(s);} catch (NumberFormatException e)//this try is to make sure that s is not a number
+					{toNewFile = toNewFile.concat(s + "\n");}//if s is not a number, has no punctuation, and has no brackets, add it to the string
+								
 				}
 	
 			FileWriter writer = null;
+						
+			try {writer = new FileWriter("YTWords");//since a new file is involved, you need to try and catch again
 			
-			try {writer = new FileWriter("YTWords");
+			writer.write(toNewFile);//write the string to the new file (CHANGE NAME OF FILE UPON SUBMISSION
+			writer.close();//close writer
 			
-			writer.write(toNewFile);
-			
-			writer.close();
 			} catch (IOException e) 
-			{System.out.println("DEBUG: Cannot write to file, it was not found");}
-	
-		}
+			{System.out.println("DEBUG: Cannot write to file, it was not found");}	
+			
+			}
 		}
 	}
 	
 	public static void writeData()
 	{
-		BufferedReader reader = null;
-		try {reader = new BufferedReader(new FileReader("YTWords"));} catch (FileNotFoundException e1) 
+		BufferedReader reader = null;//Buffered Reader makes this much easier
+		
+		try {reader = new BufferedReader(new FileReader("YTWords"));} catch (FileNotFoundException e1)//need a try catch again 
 		{System.out.println("Error in writeData");}
 
 		
-		ArrayList<String> allWords = new ArrayList<>();
+		ArrayList<String> allWords = new ArrayList<>();//Utilize ArrayList so we can use the sort function
 		String line = "";
 		File file2 = new File("YTWords");
 		Scanner scan2 = new Scanner ("YTWords");
 		
+		//read the file again so you can add all the words to the ArrayList (so you can sort)
 		try {while((line=reader.readLine())!=null){allWords.add(line);}} catch (IOException e1) 
 		{System.out.println("Error in writeData 2");}
 		
-		scan2.close();
+		scan2.close();//close scanner
+
+
+		//convert to HashSet and back to get rid of duplicates
+		HashSet<String> duplicates = new HashSet<String>(allWords);
+		ArrayList<String> sortedWords = new ArrayList<String>(duplicates);
 		
+		Collections.sort(sortedWords);//sort ArrayList (sort automatically does it alphabetically)
 		
-		Collections.sort(allWords);
-		
-		FileWriter writer2 = null;
+		FileWriter writer2 = null;//open new writer
 		
 		try {writer2 = new FileWriter("YTWords");
-		for(String s: allWords)
+		for(String s: sortedWords)
 		{
-			writer2.write(s);
+			writer2.write(s);//for every string in the ArrayList, write it into the textFile, it will now be in alphabetical order
 			writer2.write("\n");
 		}
-		writer2.close();
+		writer2.close();//close writer
 		} catch (IOException e) 
 		{System.out.println("DEBUG: Cannot write to organized file, it was not found");}
-
-		
-		
-		
-		
-		
-		
-		
 		
 	}
 	
 }
+	
+	
 	
