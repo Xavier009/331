@@ -9,8 +9,8 @@ import java.util.List;
 
 public class tester {
 
-	private List<String> key;
-	private List<String> value;
+	//private List<String> key;
+	//private List<String> value;
 	
 	
 	
@@ -52,8 +52,14 @@ public class tester {
 		Word vincent = new Word("vincent", 399, 535);
 		array.add(vincent);
 		
+		Word zane = new Word("zane", 45, 34);
+		array.add(zane);
+		
 		Word zophia = new Word("zophia", 37, 57);
 		array.add(zophia);
+		
+		Word zozie = new Word("zozie", 32, 32);
+		array.add(zozie);
 			 
 		//Word Zachary = new Word("Zachary", 6, 7);
 		//array.add(Zachary);
@@ -63,6 +69,7 @@ public class tester {
 		
 		System.out.println(table);
 		
+		//listDifferences();
 		
 	}
 	
@@ -74,18 +81,35 @@ public class tester {
 	
 	static int previousKey = 0;
 	static int repetition = 0;
-	
+	static int key = 0;
 	
 	public static boolean nameAdder(ArrayList<Word> name, int currentKey)
 	{
+	
 		//base case
 		if((currentKey == name.size()))
 		{
+			for (int i = 0; i < words.size(); i++)
+			{
+				words.get(0).addToList(words.get(i));				
+			}
+			System.out.println(words.get(0) + "'s list is: " + words.get(0).thisWordList);
+			
+			
+			table.put(previousKey, words.get(0).thisWordList);
+			
+			
+			System.out.println("The spot now has: " + table.get(previousKey));
+			
+			words.clear();
+			System.out.println("I cleared words, now the spot has: " + table.get(previousKey));
 			return false;
 		}
 
-			int key = name.get(currentKey).getKey();//get key for current word
-		
+			key = name.get(currentKey).getKey();//get key for current word
+
+
+			
 			if (previousKey != key && repetition != 0)
 			{
 				System.out.println("All these names shoudl start with the same letter: " + words);
@@ -97,8 +121,7 @@ public class tester {
 				
 				for (int i = 0; i < words.size(); i++)
 				{
-					words.get(0).addToList(words.get(i));
-					
+					words.get(0).addToList(words.get(i));				
 				}
 				
 				table.put(previousKey, words.get(0).thisWordList);
@@ -106,12 +129,14 @@ public class tester {
 				
 				words.clear();
 				System.out.println("I cleared words, now the spot has: " + table.get(previousKey));
+				
+				
 			}
 			
 			previousKey = key;
 		
 			Word w = name.get(currentKey);
-	
+			System.out.println("Next letter name is: " + w.getValue());
 			//System.out.println("Name: " + w.getValue() + " Key: " + key);
 			//System.out.println("currentKey is: " + currentKey);		
 			words.add(w);
@@ -125,33 +150,33 @@ public class tester {
 
 	public static void listDifferences()
 	{
-		for (int i = 0; i < table.size(); i++)
+		System.out.println("tables size is: " + table.size());
+		for (int i = 0; i < 130; i++)
 		{
-			for(int j = 0; j < table.get(i).size(); j++)
+			System.out.println("Got here 1");
+			System.out.println("i is: " + i);
+			System.out.println(table.get(i));
+			if(table.get(i) != null)
 			{
-				if(table.get(i).get(j).getCountPT() != table.get(i).get(j).getCountYT())
+				System.out.println("Got here 2");
+				for(int j = 0; j < table.get(i).size(); j++)
 				{
-					System.out.println("Difference detected: " + table.get(i).get(j).getValue() + " has a pt of: " + table.get(i).get(j).getCountPT() + " and a yt of: " + table.get(i).get(j).getCountYT());
-				}
+					System.out.println("Got here 3");
+					if(table.get(i).get(j).getCountPT() != table.get(i).get(j).getCountYT())
+					{
+						System.out.println("Got here 4");
+						System.out.println("Difference detected: " + table.get(i).get(j).getValue() + " has a pt of: " + table.get(i).get(j).getCountPT() + " and a yt of: " + table.get(i).get(j).getCountYT());
+					}
+				}			
 			}
 			
-			
-			
-			
-			
-			
-		}
-		
-		
-		
-		
-		
-		
-		
+		}	
 	}
-
-
 }
+
+
+
+
 
 
 
