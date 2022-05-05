@@ -1,0 +1,157 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+
+
+public class tester {
+
+	private List<String> key;
+	private List<String> value;
+	
+	
+	
+	//static HashTable<Character, ArrayList<Word>> table = new HashTable<Character, ArrayList<Word>>();
+	
+	static int version = 0;
+	public static void main(String[] args)  {
+
+		Word arnold = new Word("arnold", 3, 5);
+		array.add(arnold);		
+		
+		Word aaron = new Word("aaron", 37, 535);
+		array.add(aaron);
+		
+		Word bethany = new Word("bethany", 69, 69);
+		array.add(bethany);
+		
+		Word demarcus = new Word("demarcus", 34, 5);
+		array.add(demarcus);
+		
+		Word desmond = new Word("desmond", 2, 8);
+		array.add(desmond);
+		
+		Word dwayne = new Word("dwayne", 5, 5);
+		array.add(dwayne);
+		
+		Word jason = new Word("jason", 37, 15);
+		array.add(jason);
+		
+		Word shane = new Word("shane", 32, 32);
+		array.add(shane);
+				
+		Word victor = new Word("victor", 37, 515);
+		array.add(victor);
+
+		Word victoria = new Word("victoria", 54, 54);
+		array.add(victoria);
+		
+		Word vincent = new Word("vincent", 399, 535);
+		array.add(vincent);
+		
+		Word zophia = new Word("zophia", 37, 57);
+		array.add(zophia);
+			 
+		//Word Zachary = new Word("Zachary", 6, 7);
+		//array.add(Zachary);
+		
+		
+		nameAdder(array, 0);
+		
+		System.out.println(table);
+		
+		
+	}
+	
+	static ArrayList<Word> array = new ArrayList<Word>();
+	
+	static ArrayList<Word> words = new ArrayList<Word>();
+	
+	static Hashtable<Integer, ArrayList<Word>> table = new Hashtable<Integer, ArrayList<Word>>();
+	
+	static int previousKey = 0;
+	static int repetition = 0;
+	
+	
+	public static boolean nameAdder(ArrayList<Word> name, int currentKey)
+	{
+		//base case
+		if((currentKey == name.size()))
+		{
+			return false;
+		}
+
+			int key = name.get(currentKey).getKey();//get key for current word
+		
+			if (previousKey != key && repetition != 0)
+			{
+				System.out.println("All these names shoudl start with the same letter: " + words);
+				System.out.println("Adding to: " + previousKey);
+				//ArrayList<Word> temp = new ArrayList<Word>();
+			
+				//ArrayList<Word> temp = table.get(previousKey);
+				//temp = words;
+				
+				for (int i = 0; i < words.size(); i++)
+				{
+					words.get(0).addToList(words.get(i));
+					
+				}
+				
+				table.put(previousKey, words.get(0).thisWordList);
+				System.out.println("The spot now has: " + table.get(previousKey));
+				
+				words.clear();
+				System.out.println("I cleared words, now the spot has: " + table.get(previousKey));
+			}
+			
+			previousKey = key;
+		
+			Word w = name.get(currentKey);
+	
+			//System.out.println("Name: " + w.getValue() + " Key: " + key);
+			//System.out.println("currentKey is: " + currentKey);		
+			words.add(w);
+			repetition++;
+			
+			nameAdder(name, (currentKey + 1));
+
+		return true;
+	}
+
+
+	public static void listDifferences()
+	{
+		for (int i = 0; i < table.size(); i++)
+		{
+			for(int j = 0; j < table.get(i).size(); j++)
+			{
+				if(table.get(i).get(j).getCountPT() != table.get(i).get(j).getCountYT())
+				{
+					System.out.println("Difference detected: " + table.get(i).get(j).getValue() + " has a pt of: " + table.get(i).get(j).getCountPT() + " and a yt of: " + table.get(i).get(j).getCountYT());
+				}
+			}
+			
+			
+			
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+	}
+
+
+}
+
+
+
