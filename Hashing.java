@@ -132,38 +132,36 @@ public class Hashing {
 	
 	public static void writeListDiff()
 	{
-		
 		File file = new File("resultsListDiff.txt");
 		FileWriter writer = null;
-		try {writer = new FileWriter(file);
-		
-		
-		for (int i = 0; i < words.size(); i++)
+		try {writer = new FileWriter(file);	
+		for (int i = 0; i < 130; i++)
 		{
-			Word current = words.get(i);
-			String add = "";
-			if (current.getCountPT() > current.getCountYT())
+			String add = "";	
+			if(table.get(i) != null)
 			{
-				String zero = "";
-				if (current.getCountYT() == 0) {zero = " - ZERO";}
-				
-				add = current.getValue() + "\t\t" + "+" + (current.getCountPT() - current.getCountYT()) + "PT" + zero+ "\t\t\t\tPT: " + current.getCountPT() + " YT:" + current.getCountYT();
-				diffList.add(add);
-				//writer.write("\n");
+				for(int j = 0; j < table.get(i).size(); j++)
+				{
+					if (table.get(i).get(j).getCountPT() > table.get(i).get(j).getCountYT())
+					{
+						String zero = "";
+						if (table.get(i).get(j).getCountYT() == 0) {zero = " - ZERO";}
+						
+						add = table.get(i).get(j).getValue() + "\t\t" + "+" + (table.get(i).get(j).getCountPT() - table.get(i).get(j).getCountYT()) + "PT" + zero;//+ "\t\t\t\tPT: " + table.get(i).get(j).getCountPT() + " YT:" + table.get(i).get(j).getCountYT();
+						diffList.add(add);
+					}
+					else if (table.get(i).get(j).getCountPT() < table.get(i).get(j).getCountYT())
+					{
+						String zero = "";
+						if (table.get(i).get(j).getCountPT() == 0) {zero = " - ZERO";}
+						add = table.get(i).get(j).getValue() + "\t\t" + "+" + (table.get(i).get(j).getCountYT() - table.get(i).get(j).getCountPT()) + "YT" + zero;// + "\t\t\t\tPT: " + table.get(i).get(j).getCountPT() + " YT:" + table.get(i).get(j).getCountYT();
+						diffList.add(add);
+					}
+				}			
 			}
-			else if (current.getCountPT() < current.getCountYT())
-			{
-				String zero = "";
-				if (current.getCountPT() == 0) {zero = " - ZERO";}
-				add = current.getValue() + "\t\t" + "+" + (current.getCountYT() - current.getCountPT()) + "YT" + zero + "\t\t\t\tPT: " + current.getCountPT() + " YT:" + current.getCountYT();
-				diffList.add(add);
-				//writer.write("\n");
-			}
-			
-			
-			
 			
 		}
+		
 		
 		Collections.sort(diffList);
 		
@@ -174,11 +172,8 @@ public class Hashing {
 		}
 		writer.close();
 		
-		}catch (IOException e) {System.out.println("File cannot be generated");}
-		
+		}catch (IOException e) {System.out.println("File cannot be generated");}	
 	}
-	
-	
 	
 	
 	
