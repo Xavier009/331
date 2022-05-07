@@ -1,0 +1,288 @@
+package treeTester;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+import com.sun.source.tree.BinaryTree;
+
+import treeTester.Word;
+
+//import BinarySearchTree.Word;
+
+public class tester2 {
+	 /* Class containing left
+    and right child of current Word
+  * and key value*/
+ 
+
+ // Root of BST
+ Word root;
+
+ // Constructor
+ tester2() { root = null; }
+
+ tester2(Word value) { root = new Word(value.getValue(), value.getCountYT(), value.getCountPT()); }
+
+ // This method mainly calls insertRec()
+ void insert(Word newWord)
+ {
+	 
+	 if (this.root == null)
+	 {		 
+		 this.root = newWord;
+		// System.out.println("Root was null, new root is: " + this.root.getValue());
+
+	 }
+	 else
+	 {
+	//	 System.out.println("new root is: " + this.root.getValue());
+		 insertRec(this.root, newWord);
+	 } 
+ }
+
+ /* A recursive function to
+    insert a new key in BST */
+ Word insertRec(Word newRoot, Word toInsert)
+ {
+
+	// System.out.println("Want to insert: " + toInsert.getValue());
+	
+	 if (newRoot!= null)
+	 {
+		// System.out.println("NOT NULL Currently at: " + newRoot.getValue());
+		 if(newRoot.getValue().compareTo(toInsert.getValue()) > 0)
+		 {
+			// System.out.println("Root of: " + newRoot.getValue() + " has been detected as greater than: " + toInsert.getValue());
+			 newRoot.setLeft(insertRec(newRoot.getLeft(), toInsert));	
+		 }
+	 }
+	 if (newRoot == null)
+	 {
+	//	 System.out.println("Inserting: " + toInsert.getValue());
+		 return toInsert;
+	 }
+	 
+	 if (newRoot.getValue().compareTo(toInsert.getValue()) < 0) 
+	 {
+		// System.out.println("Root of: " + newRoot.getValue() + " has been detected as less than: " + toInsert.getValue());
+		 newRoot.setRight(insertRec(newRoot.getRight(), toInsert));	 
+	 }
+	 else if (root.getValue().compareTo(toInsert.getValue()) > 0 || root.getValue().compareTo(toInsert.getValue()) == 1) 
+	 {
+		// System.out.println("Root of: " + newRoot.getValue() + " has been detected as greater than: " + toInsert.getValue());
+		 newRoot.setLeft(insertRec(newRoot.getLeft(), toInsert));	 
+	 }else if (newRoot.getValue().compareTo(toInsert.getValue()) == 0) 
+	 {	 
+		// System.out.println("Duplicate detected");	 
+	 }
+
+	 return newRoot;
+ }
+
+ 
+ 
+ // This method mainly calls InorderRec()
+ void inorder() { inorderRec(this.root); }
+
+ // A utility function to
+ // do inorder traversal of BST
+ void inorderRec(Word root)
+ {
+	 String s = "";
+     if (root != null) {
+    	 
+    	// s+= "Currently at: " + root.getValue();
+    	 if (root.getLeft() != null)
+    	 {
+    	//	 s += " current left: " + root.getLeft().getValue();
+    	 }
+    	 if (root.getRight() != null)
+    	 {
+    	//	 s += " current right: " + root.getRight().getValue();
+    	 }
+    	// System.out.println(s);
+    	 
+         inorderRec(root.left);
+         System.out.println(root.getValue());
+         inorderRec(root.right);
+     }
+ }
+
+ 
+ 
+ public void listEqualities(Word root)
+ {
+	 
+	 File file = new File("similarities.txt");
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(file);		
+			String insert = root.inorderRec(root, 1);
+			System.out.println("Insert is: " + insert);
+			writer.write(insert);
+			writer.close();
+		}catch (IOException e) {System.out.println("File cannot be generated");}
+ }
+ 
+ 
+ public void listDifferences(Word root)
+ {
+	 
+	 File file2 = new File("differences.txt");
+		FileWriter writer2 = null;
+		try {
+			writer2 = new FileWriter(file2);		
+			String insert = root.inorderRec(root, 2);
+			System.out.println("Insert is: " + insert);
+			writer2.write(insert);
+			writer2.close();
+		}catch (IOException e) {System.out.println("File cannot be generated");}
+ }
+ 
+ 	static ArrayList<Word> array = new ArrayList<Word>();
+	
+	static ArrayList<Word> words = new ArrayList<Word>();
+	
+	static Hashtable<Integer, tester2> table = new Hashtable<Integer, tester2>();
+	
+	static int previousKey = 0;
+	static int repetition = 0;
+	static int key = 0;
+	
+	public boolean nameAdder(ArrayList<Word> name, int currentKey)
+	{	
+		//base case
+		if((currentKey == name.size()))
+		{
+			for (int i = 0; i < words.size(); i++)
+			{
+				//words.get(0).addToList(words.get(i));
+				words.get(0).insert(words.get(i));				
+			}			
+			
+			table.put(previousKey, words.get(0).thisTree);
+			words.clear();
+			return false;
+		}
+
+			key = name.get(currentKey).getKey();//get key for table.get(i).get(j) word
+
+
+			
+			if (previousKey != key && repetition != 0)
+			{			
+				for (int i = 0; i < words.size(); i++)
+				{
+					words.get(0).insert(words.get(i));				
+				}
+				
+				table.put(previousKey, words.get(0).thisTree);
+				
+				words.clear();	
+			}
+			
+			previousKey = key;
+		
+			Word w = name.get(currentKey);		
+			words.add(w);
+			repetition++;
+			
+			nameAdder(name, (currentKey + 1));
+
+		return true;
+	}
+
+	//static ArrayList<Word> array = new ArrayList<Word>();
+ 
+ public static void main(String[] args)  {
+
+		Word a = new Word("a", 3, 5);
+		array.add(a);		
+		
+		Word able = new Word("able", 37, 535);
+		array.add(able);
+		
+		Word about = new Word("about", 43,43);
+		array.add(about);
+		
+		Word acts = new Word("acts", 6, 7);
+		array.add(acts);
+
+		Word actually = new Word("actually", 7, 7);
+		array.add(actually);
+	
+		Word ad = new Word("ad", 4, 7);
+		array.add(ad);
+
+		Word adamant = new Word("adamant", 69, 70);
+		array.add(adamant);		
+		
+		Word addition = new Word("addition", 2 , 3);
+		array.add(addition);
+		
+		
+		Word after = new Word("after", 2 , 3);
+		array.add(after);
+				
+		Word dwz = new Word("dwz", 3, 1);
+		array.add(dwz);
+
+		Word dwayne = new Word("dwayne", 5, 5);
+		array.add(dwayne);
+				
+		
+		tester2 Tree = new tester2();
+		
+	//	Tree.insert(a);
+	//	Tree.insert(able);	
+	//	Tree.insert(acts);
+	//	Tree.insert(actually);
+	//	Tree.insert(ad);
+	//	Tree.insert(addition);
+	//	Tree.insert(after);
+	//	Tree.insert(about);
+	//	Tree.insert(dwayne);
+	//	Tree.insert(adamant);
+	//	Tree.insert(dwz);
+		
+		//Tree.inorder();
+		
+		System.out.println("Root is: " + Tree.root.getValue());
+		System.out.println("acts left is: "  + acts.getLeft() + " And his right is: " + acts.getRight());
+		
+		
+		Tree.nameAdder(array, 0);
+		Tree.listEqualities(a);
+		
+		//Tree.listDifferences(a);
+		
+		//Tree.listDifferences(adamant);
+		
+		//Tree.listEqualities(ad);
+		
+		//Tree.listEqualities(dwz);
+		
+		
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
