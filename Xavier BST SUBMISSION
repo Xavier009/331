@@ -1,0 +1,219 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+
+
+
+
+
+public class BST {
+	
+
+ // Root of BST
+ Word root;
+ Word left;
+ Word right;
+ 
+ static ArrayList<Word> array = new ArrayList<Word>();
+ static ArrayList<Word> doneWords = new ArrayList<Word>();
+ static ArrayList <Word> repeatingLetters = new ArrayList<Word>();
+ static ArrayList<Character> doneLetters = new ArrayList<Character>();
+ static Hashtable<Integer, Word> treeTable = new Hashtable<Integer, Word>();
+ 
+ static int previousKey = 0;
+ static int repetition = 0;
+ static int key = 0;
+ 
+ static char currentLetter;
+ 
+ 
+ // Constructor
+ BST() 
+ {
+	 root = null;
+	 
+ }
+
+ BST(Word value) 
+ {
+	 this.root = value;
+	 //root = new Word(value.getValue(), value.getCountYT(), value.getCountPT()); 
+	 
+ }
+
+ 
+	 void inorder() {}
+
+
+	 public static void listEqualities()
+	 {	 
+		 treeTabler(array, 0);
+		 
+		 File file = new File("resultsEqual.txt");
+			FileWriter writer = null;
+			try {
+				writer = new FileWriter(file);		
+				String insert = "";
+				
+				for(int i = 0; i < 135; i++)
+				{
+					if (treeTable.get(i) != null)
+					{
+						treeTable.get(i).countKeepSetter(treeTable.get(i), 1);	
+						insert += treeTable.get(i).countKeeper;//concat the string to the end of insert
+					}			
+				}			
+				writer.write(insert);
+				writer.close();
+			}catch (IOException e) {System.out.println("File cannot be generated");}
+	 }
+	 
+	 
+	 public static void listDifferences()
+	 {
+		 
+		 //treeTabler(array, 0);
+
+
+		 File file = new File("resultsDiff.txt");
+			FileWriter writer = null;
+			try {
+				writer = new FileWriter(file);		
+				String insert = "";
+				
+				for(int i = 0; i < 135; i++)
+				{
+					if (treeTable.get(i) != null)
+					{
+						treeTable.get(i).countKeepSetter(treeTable.get(i), 2);	
+						insert += treeTable.get(i).countKeeper2;//concat the string to the end of insert
+					}			
+				}			
+				writer.write(insert);
+				writer.close();
+			}catch (IOException e) {System.out.println("File cannot be generated");}
+		
+	 }
+	 
+	 
+	 public static void newInsert(Word word)
+	 {
+		 ArrayList<Word> toAdd = new ArrayList<Word>();
+		 toAdd.add(word);	 
+		 treeAdder(toAdd);
+	 }
+	 
+ 
+ 
+ public static boolean treeTabler(ArrayList<Word> passedWords, int currentKey)
+ {
+
+	 if((currentKey == passedWords.size()))
+	 {
+		 for (int i = 0; i < doneWords.size(); i++)			
+		 {			
+			 doneWords.get(0).addToList(doneWords.get(i));							
+		 }					 
+		 char c = doneWords.get(0).getValue().charAt(0);
+		 doneLetters.add(c);//add first letter t done letters
+		 treeAdder(doneWords);
+		
+		 firstWords.add(doneWords.get(0));//add first word on this letter to arraylist of done words
+		 doneWords.clear();//clear done words
+		 return false;//return
+	 }
+	 
+	 
+	 key = passedWords.get(currentKey).getKey();//get key
+
+	 if (previousKey != key && repetition != 0)
+		{			
+			for (int i = 0; i < doneWords.size(); i++)
+			{
+				doneWords.get(0).addToList(doneWords.get(i));				
+			}
+						
+			char c = doneWords.get(0).getValue().charAt(0);
+			doneLetters.add(c);//add this letter to done letters
+
+			treeAdder(doneWords);//add this word to done words		
+			firstWords.add(doneWords.get(0));//add this specific word to list of first done words
+			doneWords.clear();//clear done words
+			
+		}
+	 
+	 	previousKey = key;//set previous key to this key
+		
+		Word w = passedWords.get(currentKey);//create new word object
+		
+		doneWords.add(w);//add new word to done word list
+		repetition++;//increment repetition variable
+		treeTabler(passedWords, (currentKey + 1));//recurse through
+		return true;//return true
+ }
+ 
+ 
+ static ArrayList<Word> firstWords = new ArrayList<Word>();
+ 
+ 
+ 
+ public static void treeAdder (ArrayList<Word> letterGroup)
+ {	 
+	 for (int i = 0; i < 135; i++)
+	 {
+		 if (treeTable.get(i) != null)
+		 {
+			 if (letterGroup.get(0).getKey() == treeTable.get(i).getKey())//if this word starts with an already occupied letter
+			 {
+				 Word root = letterGroup.get(0);
+				 for (int j = 1; j < letterGroup.size(); j++)
+				 {
+					 root.insertRec(letterGroup.get(j), letterGroup.get(j).getCountPT(), letterGroup.get(j).getCountYT());//add new word to tree
+				 }	 	 				 
+				 treeTable.remove(root.getKey());//remove old root and tree (may not even be necessary)
+
+				 treeTable.put(root.getKey(), root);//add newly formed root (with tree) to key location in hashtable		 
+			
+				 return;			
+			 }
+		 }	 
+	 }
+	 
+	 Word next = letterGroup.get(0);
+		 
+	 for (int j = 0; j < letterGroup.size(); j++)		 
+	 {			 
+		 next.insertRec(letterGroup.get(j), letterGroup.get(j).getCountPT(), letterGroup.get(j).getCountYT());//add to tree		 
+	 }	 	 
+		 
+	 treeTable.put(letterGroup.get(0).getKey(), next);//add to the hashTable, it should be an open spot
+	  
+ }
+ 
+ 
+ 
+ public static void treePrinter()
+ {	 
+	 //this function was mainly for debugging, driver should not call it
+	
+	 treeTabler(array, 0);
+
+	 for (int i = 0; i < 135; i++)
+	 {	 
+		 if (treeTable.get(i) != null)			 
+		 {				 
+			 System.out.println("NEXT TREE:");			 
+			 (treeTable.get(i)).inorderRec(treeTable.get(i));//print tree attached to this letter in table	 			 
+		 }		
+	 } 
+ }
+ 
+ 
+}
