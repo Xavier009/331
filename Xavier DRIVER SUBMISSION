@@ -1,0 +1,47 @@
+
+import java.io.*;
+import java.util.*;
+
+public class Driver {
+
+	static void readFiles()
+	{	
+		boolean youtube = FileIO.openTextFile("YT1.txt");
+		FileIO.readTextFile("YT1.txt");
+		boolean panapto = FileIO.openTextFile("PT1.txt");
+		FileIO.readTextFile("PT1.txt");
+		
+		if (youtube == false || panapto == false)
+		{
+			System.out.println("ERROR OPENEING FILES FROM DRIVER!!");
+		}		
+	}
+	
+	static void debug()
+	{
+		
+		FileIO.writeData();	
+	}
+	
+	static void createListEqual()
+	{		
+		Hashing.writeListEqual();
+	}
+	
+	static void createListDiff()
+	{
+		Hashing.writeListDiff();
+	}
+	
+	static void createEqual()
+	{
+		BST.listEqualities();
+	}
+	
+	static void createDiff()
+	{
+		BST.listDifferences();
+	}
+
+}
+
