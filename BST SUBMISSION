@@ -1,0 +1,283 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+
+
+
+public class BST {
+	
+
+ // Root of BST
+ Word root;
+ Word left;
+ Word right;
+ 
+ 
+ 
+ // Constructor
+ BST() 
+ {
+	 root = null;
+	 
+ }
+
+ BST(Word value) 
+ {
+	 this.root = value;
+	 //root = new Word(value.getValue(), value.getCountYT(), value.getCountPT()); 
+	 
+ }
+
+ 
+	 void inorder() { 
+		 
+	System.out.println("Printing tree with this root: " + this.root.getValue());	
+	
+		 
+	 }
+
+
+	 public static void listEqualities()
+	 {
+		 
+		 
+		 treeTabler(array, 0);
+		 
+		 File file = new File("similarities.txt");
+			FileWriter writer = null;
+			try {
+				writer = new FileWriter(file);		
+				String insert = "";
+				
+				for(int i = 0; i < 135; i++)
+				{
+					if (treeTable.get(i) != null)
+					{
+						treeTable.get(i).countKeepSetter(treeTable.get(i), 1);	
+						insert += treeTable.get(i).countKeeper;
+						//insert += "\n";
+					}			
+				}			
+				writer.write(insert);
+				writer.close();
+			}catch (IOException e) {System.out.println("File cannot be generated");}
+	 }
+	 
+	 
+	 public static void listDifferences()
+	 {
+		 
+		 //treeTabler(array, 0);
+
+
+		 File file = new File("differences.txt");
+			FileWriter writer = null;
+			try {
+				writer = new FileWriter(file);		
+				String insert = "";
+				
+				for(int i = 0; i < 135; i++)
+				{
+					if (treeTable.get(i) != null)
+					{
+						treeTable.get(i).countKeepSetter(treeTable.get(i), 2);	
+						insert += treeTable.get(i).countKeeper2;
+						//insert += "\n";
+					}			
+				}			
+				writer.write(insert);
+				writer.close();
+			}catch (IOException e) {System.out.println("File cannot be generated");}
+		
+	 }
+	 
+
+ 
+ static ArrayList<Word> array = new ArrayList<Word>();
+ static ArrayList<Word> doneWords = new ArrayList<Word>();
+ static ArrayList <Word> repeatingLetters = new ArrayList<Word>();
+ static ArrayList<Character> doneLetters = new ArrayList<Character>();
+ static Hashtable<Integer, Word> treeTable = new Hashtable<Integer, Word>();
+ 
+ static int previousKey = 0;
+ static int repetition = 0;
+ static int key = 0;
+ 
+ static char currentLetter;
+ public static boolean treeTabler(ArrayList<Word> passedWords, int currentKey)
+ {
+	 
+	 
+	 if((currentKey == passedWords.size()))
+	 {
+		 for (int i = 0; i < doneWords.size(); i++)
+			{
+				doneWords.get(0).addToList(doneWords.get(i));				
+			}				
+		 char c = doneWords.get(0).getValue().charAt(0);
+		 doneLetters.add(c);
+		 treeAdder(doneWords);
+		 
+		// System.out.println("Clearing doneWords1: ");
+			for (int i = 0; i < doneWords.size(); i++)
+			{
+				//System.out.print(", " + doneWords.get(i).getValue() + " ");
+			}
+			//System.out.println("\n");
+			firstWords.add(doneWords.get(0));
+		 doneWords.clear();
+		 return false;
+	 }
+	 
+	 
+	 key = passedWords.get(currentKey).getKey();//get key for table.get(i).get(j) word
+
+	 if (previousKey != key && repetition != 0)
+		{			
+			for (int i = 0; i < doneWords.size(); i++)
+			{
+				doneWords.get(0).addToList(doneWords.get(i));				
+			}
+			
+			if (doneLetters.contains(passedWords.get(currentKey).getValue().charAt(0)))
+			{
+				//System.out.println("Repeating letter detected");
+				//System.out.println("Word is: " + passedWords.get(currentKey).getValue());				
+			}
+			
+			
+			char c = doneWords.get(0).getValue().charAt(0);
+			doneLetters.add(c);
+			
+			//System.out.println("Preparing to add: ");
+			for (int i = 0; i < doneWords.size(); i++)
+			{
+				//System.out.print(doneWords.get(i).getValue() + ", ");
+			}
+			
+			treeAdder(doneWords);
+			
+			//System.out.println("Clearing doneWords2: ");
+			for (int i = 0; i < doneWords.size(); i++)
+			{
+				//System.out.print(", " + doneWords.get(i).getValue() + " ");
+			}
+			//System.out.println("\n");
+			firstWords.add(doneWords.get(0));
+			doneWords.clear();
+			
+		}
+	 
+	 	previousKey = key;
+		
+		Word w = passedWords.get(currentKey);	
+		
+		//System.out.println("Adding: " +  w.getValue() + " to donewords");
+		 
+		doneWords.add(w);
+		repetition++;		
+		treeTabler(passedWords, (currentKey + 1));
+		return true;
+ }
+ 
+ 
+ static ArrayList<Word> firstWords = new ArrayList<Word>();
+ 
+ 
+ 
+ public static void treeAdder (ArrayList<Word> letterGroup)
+ {	 
+	//System.out.println("TreeAdder Called");
+	 for (int i = 0; i < 135; i++)
+	 {
+		 
+		 if (treeTable.get(i) != null)
+		 {
+			 if (letterGroup.get(0).getKey() == treeTable.get(i).getKey())
+			 {
+				 //Word root = treeTable.get(i);
+				 Word root = letterGroup.get(0);
+				// System.out.println("Repeating letter was detected, root is now: " + root.getValue());
+				 for (int j = 1; j < letterGroup.size(); j++)
+				 {
+					 
+					 System.out.println("Word: " + letterGroup.get(j).getValue() + " PT: " + letterGroup.get(j).getCountPT() + " YT: " + letterGroup.get(j).getCountYT());
+					 
+					 root.insertRec(letterGroup.get(j), letterGroup.get(j).getCountPT(), letterGroup.get(j).getCountYT());
+				 }	 	 
+				
+				 System.out.println("Root line 214 is: " + root.getValue() + " PT: " + root.getCountPT() + " YT: " + root.getCountYT());
+				 //root.inorderRec(root);
+				 treeTable.remove(root.getKey());
+				 
+				
+				 
+				treeTable.put(root.getKey(), root);		 
+			
+				System.out.println("Root here: " + root.getValue() + " PT: " + root.getCountPT() + " YT: " + root.getCountYT());
+				
+				
+				
+				return;
+				
+			 }
+		 }
+			 
+	 }
+	 
+	 
+	 
+	 
+	// System.out.println("GOT HERE");
+	 Word next = letterGroup.get(0);
+		// System.out.println("Root word is: " + root.getValue());
+		// System.out.println("Adding to key: " + letterGroup.get(0).getKey());
+
+		 for (int j = 0; j < letterGroup.size(); j++)
+		 {
+			 next.insertRec(letterGroup.get(j), letterGroup.get(j).getCountPT(), letterGroup.get(j).getCountYT());
+		 }	 	 
+		 treeTable.put(letterGroup.get(0).getKey(), next);	
+	 
+	
+	  
+ }
+ 
+ 
+ 
+ public static void treePrinter()
+ {	 
+	 
+	 treeTabler(array, 0);
+	// System.out.println("GOT HERE");
+	 for (int i = 0; i < 135; i++)
+	 {
+		 //System.out.println("GOT HERE2");
+			 if (treeTable.get(i) != null)
+			 {
+				 System.out.println("NEXT TREE:");
+				// System.out.println("Root is: " + treeTable.get(i).getValue());
+				// System.out.println("Key is: " + i);
+				 (treeTable.get(i)).inorderRec(treeTable.get(i));
+				 
+			 }		
+			 
+			 if (treeTable.get(i) == null)
+			 {
+				// System.out.println("Tree table is null");
+			 }
+		
+		
+	 }
+	 
+ }
+ 
+ 
+}
