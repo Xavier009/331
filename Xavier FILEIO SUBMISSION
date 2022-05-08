@@ -1,0 +1,230 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.io.BufferedReader;
+import java.util.HashSet;
+
+
+//Xavier Avery
+//ZF16976
+//5/8/2022
+
+public class FileIO {
+
+	//read data from text files and gather each word into another document
+	static ArrayList<Word> arrayOfWordObjects = new ArrayList<Word>();
+	static ArrayList<String> allWords = new ArrayList<>();//Utilize ArrayList so we can use the sort function
+	static ArrayList<String> doneWords = new ArrayList<>();//Utilize ArrayList so we can get the correct occurences of words
+	
+	static ArrayList<String> YTWords = new ArrayList<>();
+	static ArrayList<String> PTWords = new ArrayList<>();
+	
+	
+	static int version = 0;
+	
+	public static boolean openTextFile(String fileName)
+	{
+		try {
+			File file = new File(fileName);		
+			Scanner scan = new Scanner(file);//open a scanner
+		} catch (FileNotFoundException e) {
+			return false;
+		}		
+		return true;//else return true		
+	}
+	
+	
+	static String toNewFile = "";//string that will go to the new file
+	
+	
+	public static void readTextFile(String fileName)
+	{	
+		
+		if (fileName == "YT1.txt")
+		{
+			version = 1;
+		}else if (fileName == "PT1.txt")
+		{
+			version = 2;
+		}
+		
+		
+		String s = "";
+		String p = "";
+		//System.out.println("Filename is: " + fileName);
+		
+		if (openTextFile(fileName) == true)//if the file exists
+		{
+			File file = new File(fileName);
+			Scanner scan = null;
+			
+			try {scan = new Scanner(file);} catch (FileNotFoundException e) //redundant, probably an easier way to do this
+			{System.out.println("DEBUG: File wasn't found in readTextFile Function");}
+			
+			
+	
+			while (scan.hasNextLine()) {
+				
+				
+				p = scan.next(); //p is the next string in the file		
+				s = p.toLowerCase();
+				if(s.contains(".") == false && s.contains(",") == false && s.contains("?") == false ) //if s does not have a decimal
+				{
+					if ((s.contains("-->") == false && s.contains(":") == false))
+					{
+						if (s.contains("[") == true)//if s has brackets around it
+						{
+							s = s.substring(1, s.length()-1);//make the string just the words insied the brackets
+						}
+						
+						try {Integer.parseInt(s);} catch (NumberFormatException e)//this try is to make sure that s is not a number
+						{
+						
+							if (fileName == "YT1.txt")
+							{
+								YTWords.add(s);
+							}else if (fileName == "PT1.txt")
+							{
+								PTWords.add(s);
+							}	
+							toNewFile = toNewFile.concat(s + "\n");
+							
+						}//if s is not a number, has no punctuation, and has no brackets, add it to the string	
+					}						
+				}else {
+					//has a decimal, might be a number	
+					try {
+						
+						Float.parseFloat(s);					
+					} catch (NumberFormatException e)//this try is to make sure that s is not a number
+					{
+						String one = null;
+						if (s.contains(".") || s.contains(",") || s.contains("?"))
+						{						
+							one = s.substring(0, s.length()-1);//delete the punctuation mark
+						}
+						
+						
+						String c = one.substring(0,1);
+						
+						try {Integer.parseInt(c);}catch(NumberFormatException n)
+						{							
+							if (fileName == "YT1.txt")
+							{
+								YTWords.add(one);//add to arraylist of youtube words
+							}else if (fileName == "PT1.txt")
+							{
+								PTWords.add(one);//add to arraylist of panapto words
+							}							
+							toNewFile = toNewFile.concat(one + "\n");//concat to s						
+						}					
+					}
+				}		
+			}
+		}		
+		//here I would call WriteData()
+		writeData();		
+	}
+	
+		
+	
+	public static void writeData()
+	{
+		
+		FileWriter writer = null;
+		try {writer = new FileWriter("debug1.txt");//since a new file is involved, you need to try and catch
+		writer.write(toNewFile);//write the string to the new file
+		writer.close();//close writer
+		} catch (IOException e) 
+		{System.out.println("DEBUG: Cannot write to file, it was not found");}
+		//everything should be written to debug.txt
+		
+		
+		
+		
+		BufferedReader reader = null;//Buffered Reader makes this much easier		
+		try {reader = new BufferedReader(new FileReader("debug1.txt"));} catch (FileNotFoundException e1)//need a try catch again 
+		{System.out.println("Error in writeData");}
+		
+		
+		String line = "";
+		File file2 = new File("debug1.txt");
+		
+		//read the file again so you can add all the words to the ArrayList (so you can sort)
+		try {while((line=reader.readLine())!=null){allWords.add(line);}} catch (IOException e1) //add all words in "allWords.txt" to arrayList
+		{System.out.println("Error in writeData 2");}
+
+		
+		for (String s: allWords){s.toLowerCase();}//just incase something got through, send everything to lowercase (might not even work since strings are immutable, but nothing should be uppercase anyway)
+		
+		
+		
+		
+		ensureSame();//call helper function ensureSame
+		
+		//convert to HashSet and back to get rid of duplicates		
+		HashSet<String> duplicates = new HashSet<String>(allWords);
+		ArrayList<String> sortedWords = new ArrayList<String>(duplicates);//convert back to ArrayList
+		Collections.sort(sortedWords);//sort ArrayList (sort automatically does it alphabetically)
+		
+		
+		
+		//add sorted, NON DUPLICATE words, to debug1.txt
+		FileWriter writer2 = null;//open new writer
+		try {writer2 = new FileWriter("debug1.txt");
+		for(String s: sortedWords)//change
+		{
+			writer2.write(s);//for every string in the ArrayList, write it into the textFile, it will now be in alphabetical order
+			writer2.write("\n");
+		}
+		writer2.close();//close writer
+		} catch (IOException e) 
+		{System.out.println("DEBUG: Cannot write to organized file, it was not found");}
+		
+		
+		Hashing.words = arrayOfWordObjects;//send all words to hashing
+		BST.array = arrayOfWordObjects;//send all words to BST
+	}
+
+	
+	
+	
+	
+	public static void ensureSame()
+	{
+		
+		for (int i = 0; i < allWords.size(); i++)
+		{
+			String s = allWords.get(i);
+			
+			if (doneWords.contains(s) == false)
+			{
+				doneWords.add(s);	
+			}		
+		}
+		
+		Collections.sort(YTWords);//sort YTWords
+		Collections.sort(PTWords);//sort PTWords
+		Collections.sort(doneWords);//sort doneWords
+		
+		for (int i = 0; i < doneWords.size(); i++)
+		{
+			String s = doneWords.get(i);
+
+			int countYT = Collections.frequency(YTWords, s);
+			int countPT = Collections.frequency(PTWords,  s);
+			
+			Word word = new Word(s, countYT, countPT);	
+			arrayOfWordObjects.add(word);//add this new word to the array of word objects
+		}	
+	}
+}
+	
+
+	
+
