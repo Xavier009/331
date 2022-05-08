@@ -1,0 +1,187 @@
+import java.util.ArrayList;
+
+
+class Word{
+  int key;
+  int countYT;
+  int countPT;
+  
+  String value;
+  Word left, right;
+
+  
+  public Word(String s, int yt, int pt)
+  {
+      key = s.charAt(0);//key for hashing
+      this.value = s;
+      this.countYT = yt;
+      this.countPT = pt;
+      left = right = null;
+  }
+  
+  
+  
+  //getters and setters
+	public int getKey()
+	{
+		return this.key;
+	}
+	
+	public void setValue(String v)
+	{
+		this.value = v;
+	}
+	
+	public void setCountYT(int y)
+	{
+		this.countYT = y;
+	}
+	
+	public void setCountPT(int p)
+	{
+		this.countPT = p;
+	}
+	
+	public String getValue() 
+	{
+		return value;
+	}
+	
+	public int getCountYT()
+	{
+		return countYT;
+	}
+	
+	public int getCountPT() 
+	{
+		return countPT;
+	}
+
+
+	public void setLeft(Word word, int pt, int yt)
+	{
+		//have a ton of redundancies because this was giving me problems for a while
+		this.left = word;
+		this.left.setCountPT(pt);
+		this.left.setCountYT(yt);
+	}
+	
+	public Word getLeft()
+	{
+		return this.left;
+	}
+	
+	
+	public void setRight(Word word, int pt, int yt)
+	{
+		//have a ton of redundancies because this was giving me problems for a while
+		this.right = word;
+		this.right.setCountPT(pt);
+		this.right.setCountYT(yt);
+	}
+	
+	public Word getRight()
+	{
+		return this.right;
+	}
+	 
+	ArrayList<Word> thisWordList = new ArrayList<Word>();//for hashing function
+	
+
+	public void sendToTree()
+	{
+		BST.array = thisWordList;
+	}
+	    
+	
+	public void addToList(Word word)
+	{
+		
+		this.thisWordList.add(word);
+	}
+	
+	
+	 void insertRec(Word toInsert, int pt, int yt)
+	 {	
+		 if (getValue().compareTo(toInsert.getValue()) > 0){
+	            if(getLeft() == null){
+	                setLeft(toInsert, pt , yt);
+	            }else{
+	                getLeft().insertRec(toInsert, pt, yt);
+	            }
+	        } else if (getValue().compareTo(toInsert.getValue()) < 0) {
+	            if(getRight() == null){
+	                setRight(toInsert, pt, yt);
+	            }else{
+	                getRight().insertRec(toInsert, pt, yt);
+	            }
+	        }		 		 	
+	        return;
+	 }		 
+ 
+	 void inorderRec(Word root)
+	 {
+		 String s = "";
+	     if (root == null) { 
+	     return;
+	     }else if (root != null)
+	     {
+	    	 inorderRec(root.getLeft());
+	         inorderRec(root.getRight());
+	   }  
+	 } 
+ 
+		
+	 String countKeeper = "";//string for keeping track of same counts	
+	 String countKeeper2 = "";//string for keeping track of different counts
+		
+	void countKeepSetter(Word root, int choice)	
+	{			
+		//this could have probably been incorporated into the above function a lot easier
+		if (root == null) { 	     
+			return;		     
+		}else if (root != null)
+		{		    	 
+			countKeepSetter(root.getLeft(), choice);//recurse left	 
+			if (choice == 1)//if choice was 1, you are looking for the same counts
+			{		    		 
+				if (root.getCountYT() == root.getCountPT()) {		    			
+					countKeeper += (root.getValue() + "\t\t" + root.getCountPT());//if looking for words with the same count, concat them to countKeeper once you find them   			
+					countKeeper += "\n";		    		 
+				}		    	
+			}		    	 		    	 
+			if (choice == 2)//if choice was 2, you are looking for different counts
+			{		    		
+				String zero = "";
+				
+				if (root.getCountPT() > root.getCountYT())		    		
+				{	    			
+					if (root.getCountYT() == 0) {zero += " - ZERO";}//if looking for different counts, be sure to include "- ZERO" string
+					countKeeper2 += (root.getValue() + "\t\t+" + (root.getCountPT() - root.getCountYT()) + " PT" + zero);//concat countKeeper2 and also zero, 	    		
+					countKeeper2 += "\n";		    		
+				}		    		
+				if (root.getCountPT() < root.getCountYT())		    		
+				{		    			
+					if (root.getCountPT() == 0) {zero += " - ZERO";}//same as above but reversed
+					countKeeper2 += (root.getValue() + "\t\t+" + (root.getCountYT() - root.getCountPT()) + " YT" + zero);//same as above but reversed		    			
+					countKeeper2 += "\n";		    		
+				} 		    	
+			}	 		     
+		}    		     
+		countKeepSetter(root.getRight(), choice);//recurse right
+	}  
+	 
+	
+	//toString function
+	public String toString()
+	{
+		String s ="";
+		
+		s += "----------";
+		s+= "\n" + this.getValue();
+		s+= "\n" + this.getCountPT();
+		s+= "\n" + this.getCountYT();
+		
+		return s;				
+	}	
+}
