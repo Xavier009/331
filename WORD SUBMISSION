@@ -1,0 +1,204 @@
+import java.util.ArrayList;
+
+
+class Word{
+  int key;
+  int countYT;
+  int countPT;
+  
+  String value;
+  Word left, right;
+
+ // BST thisTree = new BST();
+  
+  
+  public Word(String s, int yt, int pt)
+  {
+      key = s.charAt(0);
+      this.value = s;
+      this.countYT = yt;
+      this.countPT = pt;
+      left = right = null;
+  }
+  
+	public int getKey()
+	{
+		return this.key;
+	}
+	
+	public void setValue(String v)
+	{
+		this.value = v;
+	}
+	
+	public void setCountYT(int y)
+	{
+		this.countYT = y;
+	}
+	
+	public void setCountPT(int p)
+	{
+		this.countPT = p;
+	}
+	
+	public String getValue() 
+	{
+		return value;
+	}
+	
+	public int getCountYT()
+	{
+		return countYT;
+	}
+	
+	public int getCountPT() 
+	{
+		return countPT;
+	}
+
+
+	public void setLeft(Word word, int pt, int yt)
+	{
+		//Word word = new Word(value, pt, yt);
+
+		this.left = word;
+		this.left.setCountPT(pt);
+		this.left.setCountYT(yt);
+	}
+	
+	public Word getLeft()
+	{
+		return this.left;
+	}
+	
+	
+	public void setRight(Word word, int pt, int yt)
+	{
+		//Word word = new Word(value, pt, yt);
+		this.right = word;
+		this.right.setCountPT(pt);
+		this.right.setCountYT(yt);
+	}
+	
+	public Word getRight()
+	{
+		return this.right;
+	}
+	 
+	ArrayList<Word> thisWordList = new ArrayList<Word>();
+	
+
+	public void sendToTree()
+	{
+		
+		BST.array = thisWordList;
+	
+	}
+	    
+	
+	public void addToList(Word word)
+	{
+		
+		this.thisWordList.add(word);
+	}
+	
+	
+	
+	String s = ""; 
+	String d = "";
+	
+	// void insert(Word newWord)
+	// {	 
+	//		 insertRec(newWord);		 
+//	 }
+
+	 
+	 void insertRec(Word toInsert, int pt, int yt)
+	 {
+		 //System.out.println("Inserting: " + toInsert.getValue() + " PT: " + toInsert.getCountPT() + " YT: " + toInsert.getCountYT());
+		
+		 if (getValue().compareTo(toInsert.getValue()) > 0){
+	            if(getLeft() == null){
+	                setLeft(toInsert, pt , yt);
+	                //System.out.println("inserted left was: " + getLeft().getValue() + " PT passed was: " + getLeft().getCountPT() + " YT passed was: " + getLeft().getCountYT());
+	            }else{
+	                getLeft().insertRec(toInsert, pt, yt);
+	            }
+	        } else if (getValue().compareTo(toInsert.getValue()) < 0) {
+	            if(getRight() == null){
+	                setRight(toInsert, pt, yt);
+	               // System.out.println("inserted right was: " + getRight().getValue() + " PT passed was: " + getRight().getCountPT() + " YT passed was: " + getRight().getCountYT());
+	            }else{
+	                getRight().insertRec(toInsert, pt, yt);
+	            }
+	        }
+		 
+		 	
+	        return;
+	 }
+	 
+	 
+	 
+	 
+	 
+	 void inorderRec(Word root)
+	 {
+		 String s = "";
+	     if (root == null) { 
+	     return;
+	     }else if (root != null)
+	     {
+	    	 inorderRec(root.getLeft());
+	         System.out.println(root.getValue() + "\tPT: " + root.getCountPT() + " YT: " + root.getCountYT());
+	         inorderRec(root.getRight());
+	   }  
+	 } 
+ 
+		String countKeeper = "";
+		String countKeeper2 = "";
+		
+		void countKeepSetter(Word root, int choice)
+		{
+			String s = "";
+		     if (root == null) { 
+		     return;
+		     
+		     }else if (root != null)
+		     {
+		    	 countKeepSetter(root.getLeft(), choice); 
+		    	 if (choice == 1)
+		    	 {
+		    		 System.out.println(root.getValue() + "\t\tPT:" + root.getCountPT() + " YT:" + root.getCountYT());
+		    		 if (root.getCountYT() == root.getCountPT()) {
+		    			 //System.out.println("Detected as the same!");
+		    			 countKeeper += (root.getValue() + "\t\t" + root.getCountPT());
+		    			 countKeeper += "\n";
+		    		 }
+		    	 }
+		    	 
+		    	 if (choice == 2)
+		    	 {
+		    		 String zero = "";
+		    		 if (root.getCountPT() > root.getCountYT())
+		    		 {
+		    			 if (root.getCountYT() == 0) {zero += " - ZERO";}
+		    			 
+		    			 countKeeper2 += (root.getValue() + "\t\t+" + (root.getCountPT() - root.getCountYT()) + "PT" + zero); 			 
+		    			 countKeeper2 += "\n";
+		    		 }
+		    		 if (root.getCountPT() < root.getCountYT())
+		    		 {
+		    			 if (root.getCountPT() == 0) {zero += " - ZERO";}
+		    			 
+		    			 countKeeper2 += (root.getValue() + "\t\t+" + (root.getCountYT() - root.getCountPT()) + "YT" + zero);
+		    			 countKeeper2 += "\n";
+		    		 } 
+		    	 }	 
+		     }    
+		     countKeepSetter(root.getRight(), choice);
+		     
+		     
+		   // System.out.println("countKeeper has been saved as: " + countKeeper);
+		}  
+	 
+}
