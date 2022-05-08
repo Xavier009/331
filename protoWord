@@ -1,0 +1,148 @@
+package treeTester;
+
+import java.util.ArrayList;
+
+//import treeTester.tester2.Word;
+
+class Word{
+    int key;
+    int countYT;
+    int countPT;
+    
+    String value;
+    Word left, right;
+
+   // BST thisTree = new BST();
+    
+    
+    public Word(String s, int yt, int pt)
+    {
+        key = s.charAt(0);
+        this.value = s;
+        this.countYT = yt;
+        this.countPT = pt;
+        left = right = null;
+    }
+    
+	public int getKey()
+	{
+		return this.key;
+	}
+	
+	public void setValue(String v)
+	{
+		this.value = v;
+	}
+	
+	public void setCountYT(int y)
+	{
+		this.countYT = y;
+	}
+	
+	public void setCountPT(int p)
+	{
+		this.countPT = p;
+	}
+	
+	public String getValue() 
+	{
+		return value;
+	}
+	
+	public int getCountYT()
+	{
+		return countYT;
+	}
+	
+	public int getCountPT() 
+	{
+		return countPT;
+	}
+
+
+	public void setLeft(Word word)
+	{
+		this.left = word;
+	}
+	
+	public Word getLeft()
+	{
+		return this.left;
+	}
+	
+	
+	public void setRight(Word word)
+	{
+		this.right = word;
+	}
+	
+	public Word getRight()
+	{
+		return this.right;
+	}
+	 
+	ArrayList<Word> thisWordList = new ArrayList<Word>();
+	
+
+	public void sendToTree()
+	{
+		
+		BST.array = thisWordList;
+	
+	}
+	    
+	
+	public void addToList(Word word)
+	{
+		
+		this.thisWordList.add(word);
+	}
+	
+	
+	
+	String s = ""; 
+	String d = "";
+	
+	 void insert(Word newWord)
+	 {	 
+			 insertRec(newWord);		 
+	 }
+
+	 
+	 void insertRec(Word toInsert)
+	 {
+		
+		 if (getValue().compareTo(toInsert.getValue()) > 0){
+	            if(getLeft() == null){
+	                setLeft(toInsert);
+	            }else{
+	                getLeft().insertRec(toInsert);
+	            }
+	        } else if (getValue().compareTo(toInsert.getValue()) < 0) {
+	            if(getRight() == null){
+	                setRight(toInsert);
+	            }else{
+	                getRight().insertRec(toInsert);
+	            }
+	        }
+	        return;
+	 }
+	 
+	 
+	 
+	 
+	 
+	 void inorderRec(Word root)
+	 {
+		 String s = "";
+	     if (root == null) { 
+	     return;
+	     }else if (root != null)
+	     {
+	    	 inorderRec(root.getLeft());
+	         System.out.println(root.getValue());
+	         inorderRec(root.getRight());
+	   }  
+	 } 
+   
+}
